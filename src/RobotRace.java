@@ -200,32 +200,49 @@ public class RobotRace extends Base
      */
     public void drawAxisFrame()
     {
-        if(gs.showAxes)
+        gl.glColor3ub((byte)255, (byte)255, (byte)0);
+        gl.glScaled(0.1, 0.1, 0.1);
+        glut.glutSolidSphere(1, 16, 16);
+        gl.glScaled(10, 10, 10);
+        // Create an array of unit vectors
+        // The unit vectors are defined as an array of ints,
+        // respectively x, y and z
+        int[][] arrows = new int[][]
         {
-            gl.glColor3ub((byte)255, (byte)255, (byte)0);
-            gl.glScaled(0.1, 0.1, 0.1);
-            glut.glutSolidSphere(1, 16, 16);
-            gl.glScaled(10, 10, 10);
-            int[][] arrows = new int[][]
-            {
-                new int[]{1,0,0},
-                new int[]{0,1,0},
-                new int[]{0,0,1}
-            };
-            for(int[] vec : arrows)
-            {
-                gl.glPushMatrix();
-                    gl.glColor3f(vec[0], vec[1], vec[2]);
-                    gl.glTranslated((double)vec[0]/2, (double)vec[1]/2, (double)vec[2]/2);
-                    gl.glScaled(getSide(vec[0]), getSide(vec[1]), getSide(vec[2]));
-                    glut.glutSolidCube(1);
-                    gl.glScaled(1/getSide(vec[0]), 1/getSide(vec[1]), 1/getSide(vec[2]));
-                    gl.glTranslated((double)vec[0]/4, (double)vec[1]/4, (double)vec[2]/4);
-                    gl.glRotatef(90F, -vec[1], vec[0], vec[2]);
-                    glut.glutSolidCone(0.1, 0.25, 16, 16);
-                gl.glPopMatrix();
-            }
+            new int[]{1,0,0},
+            new int[]{0,1,0},
+            new int[]{0,0,1}
+        };
+        for(int[] vec : arrows)
+        {
+            // Save the position, rotation and colour (and more)
+            gl.glPushMatrix();
+                // Set the colour regarding to the vector
+                // This seems to be matching the unit vector :3
+                gl.glColor3f(vec[0], vec[1], vec[2]);
+                // Move the line to draw it only on one side
+                gl.glTranslated((double)vec[0]/2, (double)vec[1]/2, (double)vec[2]/2);
+                // Scale the line so it has the length in the direction of the
+                // unit vector. The rest defaults to 0.01 for visibility.
+                gl.glScaled(getSide(vec[0]), getSide(vec[1]), getSide(vec[2]));
+                glut.glutSolidCube(1);
+                // Scale it back
+                gl.glScaled(1/getSide(vec[0]), 1/getSide(vec[1]), 1/getSide(vec[2]));
+                // Translate it to 1/4 of the length (including the cone length
+                // it will be 1). The -0.1 is to fix the line showing outside the
+                // cone (Might be a glut bug/imprecision)
+                gl.glTranslated((double)vec[0]/(4-0.1), (double)vec[1]/(4-0.1), (double)vec[2]/(4-0.1));
+                // Rotate to point the cone in the right direction. The y-axis
+                // needed to be rotated 270 degrees, thus we rotated around
+                // around the negative x-axis to compensate, since this would
+                // make the rotation clockwise
+                gl.glRotatef(90F, -vec[1], vec[0], vec[2]);
+                glut.glutSolidCone(0.1, 0.25, 16, 16);
+            // load the saved position, rotation and colour (and more)
+            gl.glPopMatrix();
         }
+        // Reset the colour to black, with alpha 1
+        gl.glClearColor(0, 0, 0, 1);
     }
     
     private double getSide(int s)
