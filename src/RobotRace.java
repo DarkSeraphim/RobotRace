@@ -1,4 +1,5 @@
 
+import java.awt.Color;
 import javax.media.opengl.GL;
 import static javax.media.opengl.GL2.*;
 import robotrace.Base;
@@ -199,7 +200,37 @@ public class RobotRace extends Base
      */
     public void drawAxisFrame()
     {
-        // code goes there ...
+        if(gs.showAxes)
+        {
+            gl.glColor3ub((byte)255, (byte)255, (byte)0);
+            gl.glScaled(0.1, 0.1, 0.1);
+            glut.glutSolidSphere(1, 16, 16);
+            gl.glScaled(10, 10, 10);
+            int[][] arrows = new int[][]
+            {
+                new int[]{1,0,0},
+                new int[]{0,1,0},
+                new int[]{0,0,1}
+            };
+            for(int[] vec : arrows)
+            {
+                gl.glPushMatrix();
+                    gl.glColor3f(vec[0], vec[1], vec[2]);
+                    gl.glTranslated((double)vec[0]/2, (double)vec[1]/2, (double)vec[2]/2);
+                    gl.glScaled(getSide(vec[0]), getSide(vec[1]), getSide(vec[2]));
+                    glut.glutSolidCube(1);
+                    gl.glScaled(1/getSide(vec[0]), 1/getSide(vec[1]), 1/getSide(vec[2]));
+                    gl.glTranslated((double)vec[0]/4, (double)vec[1]/4, (double)vec[2]/4);
+                    gl.glRotatef(90F, -vec[1], vec[0], vec[2]);
+                    glut.glutSolidCone(0.1, 0.25, 16, 16);
+                gl.glPopMatrix();
+            }
+        }
+    }
+    
+    private double getSide(int s)
+    {
+        return s == 0 ? 0.01 : (double)s;
     }
 
     /**
