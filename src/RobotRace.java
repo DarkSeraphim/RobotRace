@@ -3,6 +3,7 @@ import java.awt.Color;
 import javax.media.opengl.GL;
 import static javax.media.opengl.GL2.*;
 import robotrace.Base;
+import robotrace.GlobalState;
 import robotrace.Vector;
 
 /**
@@ -62,7 +63,30 @@ public class RobotRace extends Base
      */
     public RobotRace()
     {
-
+        this.gs = new GlobalState()
+        {
+            @Override
+            public String toString()
+            {
+                return new StringBuilder("GlobalState{")
+                .append("showAxes=").append(showAxes)
+                .append(", showStick=").append(showStick)
+                .append(", trackNr=").append(trackNr)
+                .append(", tAnim=").append(tAnim)
+                .append(", w=").append(w)
+                .append(", h=").append(h)
+                .append(", cnt=").append(cnt)
+                .append(", vDist=").append(vDist)
+                .append(", vWidth=").append(vWidth)
+                .append(", phi=").append(phi) // NOT theta
+                .append(", theta=").append(theta) // NOT phi
+                //.append(", persp=").append(persp)
+                .append(", camMode=").append(camMode)
+                //.append(", lightCamera=").append(lightCamera)
+                .append('}').toString();    
+            }
+        };
+        
         // Create a new array of four robots
         robots = new Robot[4];
 
@@ -122,7 +146,7 @@ public class RobotRace extends Base
     public void setView()
     {
         // Select part of window.
-        gl.glViewport(0, 0, gs.w, gs.h);
+        gl.glViewport(0, 0, gs. w, gs.h);
 
         // Set projection matrix.
         gl.glMatrixMode(GL_PROJECTION);
@@ -130,16 +154,25 @@ public class RobotRace extends Base
 
         // Set the perspective.
         // Modify this to meet the requirements in the assignment.
-        glu.gluPerspective(40, (float) gs.w / (float) gs.h, 0.1, 100);
+        //glu.gluPerspective(40, (float) gs.w / (float) gs.h, 0.1, 100);
+        float aspect = (float) (gs.w) / gs.h;
+        float fovy = (float) Math.toDegrees(Math.atan((gs.vWidth / 2) / gs.vDist));
+        glu.gluPerspective(fovy, aspect, 0.1*(gs.vDist), 10.0*(gs.vDist));
 
+        
         // Set camera.
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity();
-
+        
         // Update the view according to the camera mode
         camera.update(gs.camMode);
-        glu.gluLookAt(camera.eye.x(), camera.eye.y(), camera.eye.z(),
-                camera.center.x(), camera.center.y(), camera.center.z(),
+       // glu.gluLookAt(camera.eye.x(), camera.eye.y(), camera.eye.z(),
+       //         camera.center.x(), camera.center.y(), camera.center.z(),
+       //         camera.up.x(), camera.up.y(), camera.up.z());
+        glu.gluLookAt(gs.vDist * (Math.sin(gs.theta)) * Math.cos(gs.phi) , 
+                gs.vDist * (Math.cos(gs.theta)) * Math.cos(gs.phi),
+                gs.vDist * Math.sin(gs.phi),
+                gs.cnt.x(), gs.cnt.y(), gs.cnt.z(),
                 camera.up.x(), camera.up.y(), camera.up.z());
     }
 
