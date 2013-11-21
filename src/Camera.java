@@ -1,4 +1,5 @@
 
+import robot.Robot;
 import robotrace.Vector;
 
 /**

@@ -1,3 +1,5 @@
+package robot;
+
 
 /**
  * Materials that can be used for the robots.

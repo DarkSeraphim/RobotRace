@@ -1,5 +1,8 @@
 
+import robot.Material;
+import robot.Robot;
 import static javax.media.opengl.GL2.*;
+import robot.RobotPart;
 import robotrace.Base;
 import robotrace.GlobalState;
 
@@ -60,44 +63,20 @@ public class RobotRace extends Base
      */
     public RobotRace()
     {
-        this.gs = new GlobalState()
-        {
-            @Override
-            public String toString()
-            {
-                return new StringBuilder("GlobalState{")
-                .append("showAxes=").append(showAxes)
-                .append(", showStick=").append(showStick)
-                .append(", trackNr=").append(trackNr)
-                .append(", tAnim=").append(tAnim)
-                .append(", w=").append(w)
-                .append(", h=").append(h)
-                .append(", cnt=").append(cnt)
-                .append(", vDist=").append(vDist)
-                .append(", vWidth=").append(vWidth)
-                .append(", phi=").append(phi) // NOT theta
-                .append(", theta=").append(theta) // NOT phi
-                //.append(", persp=").append(persp)
-                .append(", camMode=").append(camMode)
-                //.append(", lightCamera=").append(lightCamera)
-                .append('}').toString();    
-            }
-        };
-        
         // Create a new array of four robots
         robots = new Robot[4];
 
         // Initialize robot 0
-        robots[0] = new Robot(Material.GOLD /* add other parameters that characterize this robot */);
+        robots[0] = new Robot(Material.GOLD, new float[]{0.381F, 0.2413F, 0.6858F});
 
         // Initialize robot 1
-        robots[1] = new Robot(Material.SILVER /* add other parameters that characterize this robot */);
+        robots[1] = new Robot(Material.SILVER, new float[]{0.381F, 0.2413F, 0.6858F});
 
         // Initialize robot 2
-        robots[2] = new Robot(Material.WOOD /* add other parameters that characterize this robot */);
+        robots[2] = new Robot(Material.WOOD, new float[]{0.381F, 0.2413F, 0.6858F});
 
         // Initialize robot 3
-        robots[3] = new Robot(Material.ORANGE /* add other parameters that characterize this robot */);
+        robots[3] = new Robot(Material.ORANGE, new float[]{0.381F, 0.2413F, 0.6858F});
 
         // Initialize the camera
         camera = new Camera(this);
@@ -139,6 +118,8 @@ public class RobotRace extends Base
         gl.glEnable(GL_TEXTURE_2D);
         gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
         gl.glBindTexture(GL_TEXTURE_2D, 0);
+        
+        RobotPart.initialize(gl, glu, glut);
     }
 
     /**
