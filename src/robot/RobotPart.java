@@ -11,6 +11,10 @@ import static java.lang.Math.*;
  */
 public abstract class RobotPart
 {
+    
+    protected static byte X = 0;
+    protected static byte Y = 1;
+    protected static byte Z = 2;
 
     protected static GL2 gl;
     protected static GLU glu;
@@ -24,8 +28,10 @@ public abstract class RobotPart
     }
 
     public abstract void draw(boolean isStick);
+    
+    public abstract void recalculate();
 
-    public static void drawHalfSphere(int scaley, int scalex, float r)
+    public static void drawHalfSphere(float r, int scalex, int scaley)
     {
         int i, j;
         float[][] v = new float[scalex * scaley][3];

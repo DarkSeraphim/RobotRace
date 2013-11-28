@@ -24,26 +24,39 @@ public class Robot
     private final RobotLeg leftLeg;
     private final RobotLeg rightLeg;
     
-    protected final float[] bodyDimensions;
+    protected final float[] headDimensions;
+    
+    protected final float[] origin;
     
     /**
      * Constructs the robot with initial parameters.
      */
-    public Robot(Material material, float[] bodyDimensions)
+    public Robot(Material material, float[] headDimensions)
     {
         this.material = material;
-        this.bodyDimensions = bodyDimensions;
-        this.head = new RobotHead(this, new float[]{0,0,this.bodyDimensions[2]/2});
-        this.body = new RobotBody(this, this.bodyDimensions);
-        this.leftArm = new RobotArm(this, 0.9144F, 0.0635F, true);
-        this.rightArm = new RobotArm(this, 0.9144F, 0.0635F, false);
-        this.leftLeg = new RobotLeg(this, 0.8128F, this.bodyDimensions[1]/3, true);
-        this.rightLeg = new RobotLeg(this, 0.8128F, this.bodyDimensions[1]/3, false);
+        this.origin = new float[]{0F, 0F, 0F};
+        this.headDimensions = headDimensions;
+        this.head = new RobotHead(this);
+        this.body = new RobotBody(this);
+        this.leftArm = new RobotArm(this, true);
+        this.rightArm = new RobotArm(this, false);
+        this.leftLeg = new RobotLeg(this, true);
+        this.rightLeg = new RobotLeg(this, false);
     }
     
     public float[] getColour()
     {
         return new float[]{0F, 0F, 0F};
+    }
+    
+    public float[] getOrigin()
+    {
+        return this.origin;
+    }
+    
+    public float[] getHeadDimensions()
+    {
+        return this.headDimensions;
     }
 
     /**

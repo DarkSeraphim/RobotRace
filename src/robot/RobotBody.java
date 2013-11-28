@@ -2,20 +2,21 @@ package robot;
 
 /**
  *
- * @author Mark Hendriks & Frank Kuipers
+ * @author Mark Hendriks & Gabriel Garcia
  */
 public class RobotBody extends RobotPart
 {
     
+    private float[] o;
     private float[] dimensions;
     // I planned to use this if I was going to dynamically change body dimensions
     // But it was unused due a small lack of time
     private Robot robot;
 
-    public RobotBody( Robot robot, float[] dimensions)
+    public RobotBody( Robot robot)
     {
         this.robot = robot;
-        this.dimensions = dimensions;
+        recalculate();
     }
     
     /*
@@ -26,6 +27,7 @@ public class RobotBody extends RobotPart
     public void draw(boolean isStick) 
     {
          gl.glPushMatrix();
+            gl.glTranslatef(o[X], o[Y], o[Z]);
             // Scale
             gl.glScalef(dimensions[0], dimensions[1], dimensions[2]);
             // Draw cube
@@ -40,6 +42,20 @@ public class RobotBody extends RobotPart
             }
             // And scale back
         gl.glPopMatrix();
+    }
+    
+    @Override
+    public final void recalculate()
+    {
+        float[] head = this.robot.getHeadDimensions();
+        this.o = this.robot.getOrigin();
+        this.o[Z] += head[Z]*(5.75);
+        this.dimensions = new float[]
+        {
+            head[X]*2,
+            head[Y],
+            head[Z]*3.5F
+        };
     }
 
 }

@@ -63,20 +63,22 @@ public class RobotRace extends Base
      */
     public RobotRace()
     {
+        float[] headDimensions = new float[]{0.1524F, 0.2413F, 0.2286F};
+        
         // Create a new array of four robots
         robots = new Robot[4];
 
         // Initialize robot 0
-        robots[0] = new Robot(Material.GOLD, new float[]{0.381F, 0.2413F, 0.6858F});
+        robots[0] = new Robot(Material.GOLD, headDimensions);
 
         // Initialize robot 1
-        robots[1] = new Robot(Material.SILVER, new float[]{0.381F, 0.2413F, 0.6858F});
+        robots[1] = new Robot(Material.SILVER, headDimensions);
 
         // Initialize robot 2
-        robots[2] = new Robot(Material.WOOD, new float[]{0.381F, 0.2413F, 0.6858F});
+        robots[2] = new Robot(Material.WOOD, headDimensions);
 
         // Initialize robot 3
-        robots[3] = new Robot(Material.ORANGE, new float[]{0.381F, 0.2413F, 0.6858F});
+        robots[3] = new Robot(Material.ORANGE, headDimensions);
 
         // Initialize the camera
         camera = new Camera(this);
@@ -186,7 +188,7 @@ public class RobotRace extends Base
         }
 
         // Draw the first robot
-        robots[0].draw(false);
+        robots[0].draw(gs.showStick);
 
         // Draw race track
         raceTrack.draw(gs.trackNr);

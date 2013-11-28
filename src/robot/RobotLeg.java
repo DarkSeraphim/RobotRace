@@ -12,11 +12,9 @@ public class RobotLeg extends RobotPart
     private Robot robot;
     private boolean isLeft;
 
-    public RobotLeg(Robot robot, float l, float d, boolean isLeft)
+    public RobotLeg(Robot robot, boolean isLeft)
     {
         this.robot = robot;
-        this.length = l;
-        this.diametre = d;
         this.isLeft = isLeft;
     }
 
@@ -29,7 +27,7 @@ public class RobotLeg extends RobotPart
     {
         float[] origin = new float[]
         {
-            (isLeft ? 1 : -1) * robot.bodyDimensions[0] / 2 + (isLeft ? -1 : 1) * 0.1f, 0f, -robot.bodyDimensions[2] / 2
+            (isLeft ? 1 : -1) * robot.headDimensions[0] / 2 + (isLeft ? -1 : 1) * 0.1f, 0f, -robot.headDimensions[2] / 2
         };
         gl.glPushMatrix();
         gl.glColor3fv(this.robot.getColour(), 0);
@@ -64,34 +62,16 @@ public class RobotLeg extends RobotPart
         gl.glColor3fv(this.robot.getColour(), 0);
         if (!isStick)
         {
-            drawHalfSphere(32, 32, 1f);
+            drawHalfSphere(1f, 32, 32);
             gl.glScalef(1.0f, 0.0f, 1.0f);
-            drawHalfSphere(32, 32, 1.0f);
+            drawHalfSphere(1.0f, 32, 32);
             gl.glScalef(1 / 2f, 1.0f, 1.0f);
         }
         gl.glPopMatrix();
     }
-
-    /*
-     * Getters and setters for the length and diametre of the leg
-     */
-    public void setLength(float nl)
+    
+    public final void recalculate()
     {
-        this.length = nl;
-    }
-
-    public float getLength()
-    {
-        return this.length;
-    }
-
-    public void setDiametre(float nd)
-    {
-        this.diametre = nd;
-    }
-
-    public float getDiametre()
-    {
-        return this.diametre;
+        
     }
 }
