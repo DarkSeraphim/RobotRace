@@ -1,5 +1,6 @@
 package robot;
 
+
 /**
  *
  * @author Mark Hendriks & Gabriel Garcia
@@ -29,7 +30,7 @@ public class RobotBody extends RobotPart
          gl.glPushMatrix();
             gl.glTranslatef(o[X], o[Y], o[Z]);
             // Scale
-            gl.glScalef(dimensions[0], dimensions[1], dimensions[2]);
+            gl.glScalef(dimensions[X], dimensions[Y], dimensions[Z]);
             // Draw cube
             gl.glColor3fv(this.robot.getColour(), 0);
             if(isStick)
@@ -48,14 +49,21 @@ public class RobotBody extends RobotPart
     public final void recalculate()
     {
         float[] head = this.robot.getHeadDimensions();
-        this.o = this.robot.getOrigin();
-        this.o[Z] += head[Z]*(5.75);
+        
         this.dimensions = new float[]
         {
             head[X]*2,
-            head[Y],
+            head[Y]*0.8F,
             head[Z]*3.5F
         };
+        
+        this.o = this.robot.getOrigin().clone();
+        this.o[Z] += head[Z]*(5.75F);
+    }
+    
+    public final float[] getDimensions()
+    {
+        return this.dimensions;
     }
 
 }

@@ -17,8 +17,8 @@ public class Robot
      */
     private final Material material;
     
-    private final RobotHead head;
-    private final RobotBody body;
+    protected final RobotHead head;
+    protected final RobotBody body;
     private final RobotArm leftArm;
     private final RobotArm rightArm;
     private final RobotLeg leftLeg;
@@ -57,6 +57,11 @@ public class Robot
     public float[] getHeadDimensions()
     {
         return this.headDimensions;
+    }
+    
+    public float[] getBodyDimensions()
+    {
+        return this.body.getDimensions();
     }
 
     /**

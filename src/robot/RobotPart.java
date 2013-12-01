@@ -46,6 +46,7 @@ public abstract class RobotPart
             }
         }
 
+        gl.glPushMatrix();
         gl.glBegin(GL2.GL_QUADS);
         for (i = 0; i < scalex - 1; ++i)
         {
@@ -58,5 +59,6 @@ public abstract class RobotPart
             }
         }
         gl.glEnd();
+        gl.glPopMatrix();
     }
 }
