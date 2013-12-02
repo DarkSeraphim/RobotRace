@@ -39,7 +39,9 @@ import robotrace.GlobalState;
  */
 public class RobotRace extends Base
 {
-
+        double camera_X = gs.vDist * (Math.sin(gs.theta)) * Math.cos(gs.phi); 
+        double camera_Y = gs.vDist * (Math.cos(gs.theta)) * Math.cos(gs.phi);       
+        double camera_Z = gs.vDist * Math.sin(gs.phi);       
     /**
      * Array of the four robots.
      */
@@ -111,7 +113,12 @@ public class RobotRace extends Base
         gl.glEnable(GL_POLYGON_SMOOTH);
         gl.glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
         gl.glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-
+        
+        //enable lighting
+        gl.glEnable(GL_LIGHTING);
+        //creating camera lightsource
+        gl.glEnable(GL_LIGHT0); 
+        
         // Enable depth testing.
         gl.glEnable(GL_DEPTH_TEST);
         gl.glDepthFunc(GL_LESS);
@@ -124,14 +131,17 @@ public class RobotRace extends Base
         RobotPart.initialize(gl, glu, glut);
     }
 
+
+    
     /**
      * Configures the viewing transform.
      */
     @Override
     public void setView()
     {
+        
         // Select part of window.
-        gl.glViewport(0, 0, gs. w, gs.h);
+        gl.glViewport(0, 0, gs.w, gs.h);
 
         // Set projection matrix.
         gl.glMatrixMode(GL_PROJECTION);
@@ -144,6 +154,8 @@ public class RobotRace extends Base
         float fovy = (float) Math.toDegrees(Math.atan((gs.vWidth / 2) / gs.vDist));
         glu.gluPerspective(fovy, aspect, 0.1*(gs.vDist), 10.0*(gs.vDist));
 
+            //float[] cameraLightPos  = {(float)camera_X+0.5f,(float)camera_Y,(float)camera_Z+3f, 1.0f};
+            //gl.glLightfv( GL_LIGHT0, GL_POSITION, cameraLightPos,0);  
         
         // Set camera.
         gl.glMatrixMode(GL_MODELVIEW);
