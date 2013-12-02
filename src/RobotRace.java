@@ -115,7 +115,7 @@ public class RobotRace extends Base
         gl.glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
         
         //enable lighting
-        gl.glEnable(GL_LIGHTING);
+        //gl.glEnable(GL_LIGHTING);
         //creating camera lightsource
         gl.glEnable(GL_LIGHT0); 
         

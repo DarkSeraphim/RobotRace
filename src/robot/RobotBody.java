@@ -14,7 +14,7 @@ public class RobotBody extends RobotPart
     // But it was unused due a small lack of time
     private Robot robot;
 
-    public RobotBody( Robot robot)
+    public RobotBody(Robot robot)
     {
         this.robot = robot;
         recalculate();
