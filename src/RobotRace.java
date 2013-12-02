@@ -6,6 +6,9 @@ import static javax.media.opengl.GL.GL_FRONT;
 import static javax.media.opengl.GL2.*;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_AMBIENT;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_DIFFUSE;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHT0;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_POSITION;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SHININESS;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SPECULAR;
 import robot.RobotPart;
@@ -44,10 +47,7 @@ import robotrace.GlobalState;
  * additional textured primitives to the GLUT object.
  */
 public class RobotRace extends Base
-{
-        double camera_X = gs.vDist * (Math.sin(gs.theta)) * Math.cos(gs.phi); 
-        double camera_Y = gs.vDist * (Math.cos(gs.theta)) * Math.cos(gs.phi);       
-        double camera_Z = gs.vDist * Math.sin(gs.phi);       
+{  
     /**
      * Array of the four robots.
      */
@@ -114,6 +114,8 @@ public class RobotRace extends Base
         gl.glEnable(GL_BLEND);
         gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        gl.glEnable(GL_NORMALIZE);
+        
         // Enable anti-aliasing.
         gl.glEnable(GL_LINE_SMOOTH);
         gl.glEnable(GL_POLYGON_SMOOTH);
@@ -124,6 +126,8 @@ public class RobotRace extends Base
         //gl.glEnable(GL_LIGHTING);
         //creating camera lightsource
         gl.glEnable(GL_LIGHT0); 
+        float[] globalAmbient  = {0.5f, 0.5f, 0.5f, 1.0f}; 
+        gl.glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient,0);
         
         // Enable depth testing.
         gl.glEnable(GL_DEPTH_TEST);
@@ -158,14 +162,18 @@ public class RobotRace extends Base
         //glu.gluPerspective(40, (float) gs.w / (float) gs.h, 0.1, 100);
         float aspect = (float) (gs.w) / gs.h;
         float fovy = (float) Math.toDegrees(Math.atan((gs.vWidth / 2) / gs.vDist));
-        glu.gluPerspective(fovy, aspect, 0.1*(gs.vDist), 10.0*(gs.vDist));
-
-            //float[] cameraLightPos  = {(float)camera_X+0.5f,(float)camera_Y,(float)camera_Z+3f, 1.0f};
-            //gl.glLightfv( GL_LIGHT0, GL_POSITION, cameraLightPos,0);  
+        glu.gluPerspective(fovy, aspect, 0.1*(gs.vDist), 10.0*(gs.vDist)); 
         
         // Set camera.
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity();
+        
+        double camera_X = gs.vDist * (Math.sin(gs.theta)) * Math.cos(gs.phi); 
+        double camera_Y = gs.vDist * (Math.cos(gs.theta)) * Math.cos(gs.phi);       
+        double camera_Z = gs.vDist * Math.sin(gs.phi);     
+        
+        float[] cameraLightPos  = {(float)camera_X+2.5f,(float)camera_Y,(float)camera_Z+3f, 1.0f};
+        gl.glLightfv( GL_LIGHT0, GL_POSITION, cameraLightPos,0); 
         
         // Update the view according to the camera mode
         camera.update(gs.camMode);
@@ -205,6 +213,8 @@ public class RobotRace extends Base
             drawAxisFrame();
         }
 
+        gl.glEnable(GL_LIGHTING);
+
         // Draw the first robot
         gl.glPushMatrix();
         gl.glTranslatef(1.5f, 0f, 0f);
@@ -225,6 +235,7 @@ public class RobotRace extends Base
         gl.glTranslatef(-1.5f, 0f, 0f);
         robots[3].draw(gs.showStick);
         gl.glPopMatrix();
+        gl.glDisable(GL_LIGHTING);
         
         // Draw race track
         raceTrack.draw(gs.trackNr);

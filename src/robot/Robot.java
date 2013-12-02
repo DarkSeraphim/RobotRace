@@ -1,14 +1,6 @@
 package robot;
 import javax.media.opengl.GL;
-import static javax.media.opengl.GL.GL_FRONT;
-import static javax.media.opengl.GL2.*;
 import javax.media.opengl.GL2;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_AMBIENT;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_DIFFUSE;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SHININESS;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SPECULAR;
-import robotrace.Base;
-import robotrace.GlobalState;
 
 
 
@@ -56,6 +48,11 @@ public class Robot
         return new float[]{0F, 0F, 0F};
     }
     
+    public Material getMaterial()
+    {
+        return this.material;
+    }
+    
     public float[] getOrigin()
     {
         return this.origin;
@@ -76,6 +73,10 @@ public class Robot
      */
     public void draw(boolean stickFigure)
     {
+        RobotPart.gl.glMaterialfv(GL.GL_FRONT, GL2.GL_DIFFUSE, material.diffuse,0);
+        RobotPart.gl.glMaterialfv(GL.GL_FRONT, GL2.GL_SPECULAR, material.specular,0);
+        RobotPart.gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_SHININESS, material.shine,0);
+        RobotPart.gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT, material.ambient,0);
 
         this.head.draw(stickFigure);
         this.body.draw(stickFigure);
@@ -83,7 +84,6 @@ public class Robot
         this.rightArm.draw(stickFigure);
         this.leftLeg.draw(stickFigure);
         this.rightLeg.draw(stickFigure);
-        // code goes here ...
     }
     
 }

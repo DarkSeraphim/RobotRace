@@ -33,6 +33,13 @@ public abstract class RobotPart
 
     public static void drawHalfSphere(float r, int scalex, int scaley)
     {
+        gl.glPushMatrix();
+        _drawHalfSphere(r, scalex, scaley);
+        gl.glPopMatrix();
+    }
+    
+    private static void _drawHalfSphere(float r, int scalex, int scaley)
+    {
         int i, j;
         float[][] v = new float[scalex * scaley][3];
 
@@ -46,7 +53,6 @@ public abstract class RobotPart
             }
         }
 
-        gl.glPushMatrix();
         gl.glBegin(GL2.GL_QUADS);
         for (i = 0; i < scalex - 1; ++i)
         {
@@ -59,6 +65,15 @@ public abstract class RobotPart
             }
         }
         gl.glEnd();
-        gl.glPopMatrix();
+    }
+    
+    public static void drawSphere(float r, int scalex, int scaley)
+    {
+        /*gl.glPushMatrix();
+        _drawHalfSphere(r, scalex, scaley);
+        gl.glRotatef(180, 1f, 0f, 0f);
+        _drawHalfSphere(r, scalex, scaley);
+        gl.glPopMatrix();*/
+        glut.glutSolidSphere(r, scaley, scaley);
     }
 }

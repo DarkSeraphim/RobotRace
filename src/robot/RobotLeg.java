@@ -34,7 +34,6 @@ public class RobotLeg extends RobotPart
     public void draw(boolean isStick)
     {
         gl.glPushMatrix();
-        gl.glColor3fv(new float[]{1,0,0}, 0);
         gl.glTranslatef(origin[X], origin[Y], origin[Z]-this.uDimensions[Z]);
         gl.glScalef(this.uDimensions[X], this.uDimensions[Y], this.uDimensions[Z]);
         if (isStick)
@@ -47,9 +46,8 @@ public class RobotLeg extends RobotPart
         }
         gl.glScalef(1/this.uDimensions[X], 1/this.uDimensions[Y], 1/this.uDimensions[Z]);
         gl.glTranslatef(0, 0, -(this.kneeRadius));
-        gl.glColor3f(0F,1F,0F);
-        glut.glutSolidSphere(this.kneeRadius, 16, 16);
-        gl.glColor3f(0F,0F,1F);
+        //glut.glutSolidSphere(this.kneeRadius, 16, 16);
+        drawSphere(this.kneeRadius, 16, 16);
         gl.glTranslatef(0, 0, -(this.kneeRadius)-this.lDimensions[Z]);
         gl.glScalef(this.lDimensions[X], this.lDimensions[Y], this.lDimensions[Z]);
         if (isStick)
@@ -67,7 +65,7 @@ public class RobotLeg extends RobotPart
             gl.glRotatef(90, 1.0f, 0.0f, 0.0f);
             gl.glRotatef(90, 0.0f, 1.0f, 0.0f);
             // Foot
-            gl.glTranslatef(this.lDimensions[X]/2, 0.0f, 0.0f);
+            gl.glTranslatef(this.lDimensions[X]/2, 0.0f, 0.005F);
             gl.glScalef(this.lDimensions[X] * 1.5f, this.lDimensions[X] * 1f, this.lDimensions[X] * 1.25f);
             drawHalfSphere(1f, 32, 32);
             gl.glScalef(1.0f, 0.0f, 1.0f);

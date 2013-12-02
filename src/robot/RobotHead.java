@@ -28,6 +28,7 @@ public class RobotHead extends RobotPart
     @Override
     public void draw(boolean isStick)
     {   
+        
         gl.glColor3fv(this.robot.getColour(), 0);
         gl.glPushMatrix();
             gl.glTranslatef(origin[X], origin[Y], origin[Z]);
@@ -36,9 +37,9 @@ public class RobotHead extends RobotPart
                 gl.glRotated(90, 1, 0, 0);
                 gl.glScalef(this.dimensions[X]/2, this.dimensions[Z]/3, this.dimensions[X]/2);
                 drawHalfSphere(1F, 32, 32);
-                gl.glRotated(180, 1, 0, 0);
+                //gl.glRotated(180, 0, 0, 1);
                 gl.glScaled(1, 2, 1);
-                drawHalfSphere(1F, 32, 32);
+                drawHalfSphere(-1F, 32, 32);
             }
             else
             {
@@ -56,7 +57,7 @@ public class RobotHead extends RobotPart
     {
         this.origin = this.robot.getOrigin().clone();
         float[] head = this.robot.getHeadDimensions();
-        this.origin[Z] += head[Z]*(7F+2F/3F);
+        this.origin[Z] += head[Z]*(8F+0.1F);
         this.dimensions = new float[]
         {
             head[X],
