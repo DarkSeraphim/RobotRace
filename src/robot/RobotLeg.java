@@ -11,9 +11,9 @@ public class RobotLeg extends RobotPart
 {
 
     float[] origin;
-    float[] uDimensions;
+    float[] uDimensions; // upper leg dimensions
     float kneeRadius = 0.1F;
-    float[] lDimensions;
+    float[] lDimensions; // lower leg dimensions
     
     private Robot robot;
     private boolean isLeft;
@@ -35,11 +35,11 @@ public class RobotLeg extends RobotPart
         gl.glPushMatrix();
         gl.glTranslatef(origin[X], origin[Y], origin[Z]-this.uDimensions[Z]);
         gl.glScalef(this.uDimensions[X], this.uDimensions[Y], this.uDimensions[Z]);
-        if (isStick)
+        if (isStick) // if the stick figures mode is on
         {
             glut.glutSolidCylinder(0.01*(1/this.lDimensions[X]), 1D, 16, 16);
         }
-        else
+        else // if the solid robots mode is on
         {
             glut.glutSolidCylinder(.5D, 1D, 16, 16);
         }
@@ -49,15 +49,15 @@ public class RobotLeg extends RobotPart
         drawSphere(this.kneeRadius, 16, 16);
         gl.glTranslatef(0, 0, -(this.kneeRadius)-this.lDimensions[Z]);
         gl.glScalef(this.lDimensions[X], this.lDimensions[Y], this.lDimensions[Z]);
-        if (isStick)
+        if (isStick) // if stick figures mode is on
         {
             glut.glutSolidCylinder(0.01*(1/this.lDimensions[X]), 1D, 16, 16);
         }
-        else
+        else // if solid robots mode is on
         {
             glut.glutSolidCylinder(.5D, 1D, 16, 16);
         }
-        if (!isStick)
+        if (!isStick) // draw the foot only when stick figures mode is off
         {
             gl.glScalef(1/this.lDimensions[X], 1/this.lDimensions[Y], 1/this.lDimensions[Z]);
             //gl.glTranslatef(0, 0, -this.lDimensions[Z]/2);
@@ -74,7 +74,7 @@ public class RobotLeg extends RobotPart
     }
     
     @Override
-    public final void recalculate()
+    public final void recalculate() // recalculate dimensions proportional to the head dimensions
     {
         this.origin = this.robot.getOrigin().clone();
         float[] head = this.robot.getHeadDimensions();

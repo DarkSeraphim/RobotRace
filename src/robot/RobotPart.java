@@ -11,7 +11,7 @@ import static java.lang.Math.*;
  */
 public abstract class RobotPart
 {
-    
+    // for 3 dimensional arrays
     protected static byte X = 0;
     protected static byte Y = 1;
     protected static byte Z = 2;
@@ -30,14 +30,14 @@ public abstract class RobotPart
     public abstract void draw(boolean isStick);
     
     public abstract void recalculate();
-
+ // for ceratin body parts like feet and the head.
     public static void drawHalfSphere(float r, int scalex, int scaley)
     {
         gl.glPushMatrix();
         _drawHalfSphere(r, scalex, scaley);
         gl.glPopMatrix();
     }
-    
+    // draws half spheres for certain body parts like the feet and the head
     private static void _drawHalfSphere(float r, int scalex, int scaley)
     {
         int i, j;
@@ -66,7 +66,7 @@ public abstract class RobotPart
         }
         gl.glEnd();
     }
-    
+    //drawing a normal solid sphere
     public static void drawSphere(float r, int scalex, int scaley)
     {
         /*gl.glPushMatrix();

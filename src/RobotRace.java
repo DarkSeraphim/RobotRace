@@ -161,10 +161,12 @@ public class RobotRace extends Base
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity();
         
+        // keeps the coordinates of the camera
         double camera_X = gs.vDist * (Math.sin(gs.theta)) * Math.cos(gs.phi); 
         double camera_Y = gs.vDist * (Math.cos(gs.theta)) * Math.cos(gs.phi);       
         double camera_Z = gs.vDist * Math.sin(gs.phi);     
         
+        //sets he light source to the camera point of vew, but a little bit shifted uppwards and to the left 
         float[] cameraLightPos  = {(float)camera_X+2.5f,(float)camera_Y,(float)camera_Z+3f, 1.0f};
         gl.glLightfv( GL_LIGHT0, GL_POSITION, cameraLightPos,0); 
         

@@ -33,11 +33,11 @@ public class RobotBody extends RobotPart
             gl.glScalef(dimensions[X], dimensions[Y], dimensions[Z]);
             // Draw cube
             gl.glColor3fv(this.robot.getColour(), 0);
-            if(isStick)
+            if(isStick) // if stick figures mode is on
             {
                 glut.glutWireCube(1);
             }
-            else
+            else // if solid robots mode is on
             {
                 glut.glutSolidCube(1);
             }
@@ -46,7 +46,7 @@ public class RobotBody extends RobotPart
     }
     
     @Override
-    public final void recalculate()
+    public final void recalculate() // recalculates the dimensions proportional to the head size
     {
         float[] head = this.robot.getHeadDimensions();
         

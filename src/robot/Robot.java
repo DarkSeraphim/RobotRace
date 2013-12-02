@@ -43,7 +43,7 @@ public class Robot
         this.rightLeg = new RobotLeg(this, false);
     }
     
-    public float[] getColour()
+    public float[] getColour() //Colors are not used due to the reflective properties of the materials
     {
         return new float[]{0F, 0F, 0F};
     }
@@ -73,6 +73,7 @@ public class Robot
      */
     public void draw(boolean stickFigure)
     {
+        //giving the refective propperties of the materials to the robots
         RobotPart.gl.glMaterialfv(GL.GL_FRONT, GL2.GL_DIFFUSE, material.diffuse,0);
         RobotPart.gl.glMaterialfv(GL.GL_FRONT, GL2.GL_SPECULAR, material.specular,0);
         RobotPart.gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_SHININESS, material.shine,0);

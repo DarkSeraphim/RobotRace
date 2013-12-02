@@ -25,7 +25,7 @@ public class RobotArm extends RobotPart
     public RobotArm(Robot robot, boolean isLeft)
     {
         this.robot = robot;
-        this.isLeft = isLeft;
+        this.isLeft = isLeft; // dtermines if left or right arm
         recalculate();
     }
 
@@ -56,7 +56,7 @@ public class RobotArm extends RobotPart
         drawSphere(this.elbowRadius, 16, 16);
         gl.glTranslatef(0, 0, -this.elbowRadius - this.lDimensions[Z]);
         gl.glScalef(this.lDimensions[X], this.lDimensions[Y], this.lDimensions[Z]);
-        if (isStick)
+        if (isStick) // if stick figures mode is on
         {
             glut.glutSolidCylinder(0.1, 1D, 16, 16); // upper arm
         }
@@ -65,7 +65,7 @@ public class RobotArm extends RobotPart
             glut.glutSolidCylinder(0.5D, 1D, 16, 16);
         }
         
-        if (!isStick)
+        if (!isStick) // if solid robots mode is on
         {
             gl.glScalef(1/this.lDimensions[X], 1/this.lDimensions[Y], 1/this.lDimensions[Z]);
             gl.glTranslatef(0, 0f, -this.hand[Z]/2);
@@ -155,7 +155,7 @@ public class RobotArm extends RobotPart
     }
     
     @Override
-    public final void recalculate()
+    public final void recalculate() // recalculated he origin proportional to the head size
     {
         this.origin = this.robot.getOrigin().clone();
         float[] head = this.robot.getHeadDimensions();

@@ -32,28 +32,28 @@ public class RobotHead extends RobotPart
         gl.glColor3fv(this.robot.getColour(), 0);
         gl.glPushMatrix();
             gl.glTranslatef(origin[X], origin[Y], origin[Z]);
-            if(!isStick)
+            if(!isStick) // if solid robots mode is on
             {
                 gl.glRotated(90, 1, 0, 0);
                 gl.glScalef(this.dimensions[X]/2, this.dimensions[Z]/3, this.dimensions[X]/2);
-                drawHalfSphere(1F, 32, 32);
+                drawHalfSphere(1F, 32, 32); // top half of the head
                 //gl.glRotated(180, 0, 0, 1);
                 gl.glScaled(1, 2, 1);
-                drawHalfSphere(-1F, 32, 32);
+                drawHalfSphere(-1F, 32, 32); // bottom half of the head
             }
-            else
+            else // if stick figures mode is on
             {
                 gl.glRotated(90, 1, 0, 0);
                 gl.glScalef(this.dimensions[X]/2, this.dimensions[Z]/2, this.dimensions[X]/2);
-                drawHalfSphere(1F, 32, 32);
+                drawHalfSphere(1F, 32, 32); // top half of the head
                 gl.glRotated(180, 1, 0, 0);
-                drawHalfSphere(1F, 32, 32);
+                drawHalfSphere(1F, 32, 32); // bottom half of the head
             }
         gl.glPopMatrix();
     }
     
     @Override
-    public final void recalculate()
+    public final void recalculate() //recalculates dimensions proportional to the head dimensions 
     {
         this.origin = this.robot.getOrigin().clone();
         float[] head = this.robot.getHeadDimensions();
