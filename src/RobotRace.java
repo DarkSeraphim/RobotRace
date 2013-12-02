@@ -1,19 +1,12 @@
 
 import robot.Material;
 import robot.Robot;
-import javax.media.opengl.GL;
-import static javax.media.opengl.GL.GL_FRONT;
 import static javax.media.opengl.GL2.*;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_AMBIENT;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_DIFFUSE;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHT0;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_POSITION;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SHININESS;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SPECULAR;
 import robot.RobotPart;
 import robotrace.Base;
-import robotrace.GlobalState;
 
 /**
  * Handles all of the RobotRace graphics functionality, which should be extended

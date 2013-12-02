@@ -1,7 +1,5 @@
 package robot;
 
-import static robot.RobotPart.X;
-import static robot.RobotPart.Z;
 import static robot.RobotPart.gl;
 import static robot.RobotPart.glut;
 
