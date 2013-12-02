@@ -61,6 +61,10 @@ public class RobotBody extends RobotPart
         this.o[Z] += head[Z]*(5.75F);
     }
     
+    /**
+     * 
+     * @return the body dimensions, based on the head dimensions
+     */
     public final float[] getDimensions()
     {
         return this.dimensions;

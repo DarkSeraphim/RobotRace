@@ -74,7 +74,7 @@ public class RobotLeg extends RobotPart
     }
     
     @Override
-    public final void recalculate() // recalculate dimensions proportional to the head dimensions
+    public final void recalculate()
     {
         this.origin = this.robot.getOrigin().clone();
         float[] head = this.robot.getHeadDimensions();
@@ -82,8 +82,8 @@ public class RobotLeg extends RobotPart
         
         this.uDimensions = new float[]
         {
-            (head[Z]*2 - this.kneeRadius)/3, // According to our resources, a third of the length
-            (head[Z]*2 - this.kneeRadius)/3, // According to our resources, a third of the length
+            (head[Z]*2 - this.kneeRadius)/3,
+            (head[Z]*2 - this.kneeRadius)/3,
             head[Z]*2 - this.kneeRadius
         };
         
@@ -93,8 +93,8 @@ public class RobotLeg extends RobotPart
         
         this.lDimensions = new float[]
         {
-            (head[Z]*1.5F)/3, // According to our resources
-            (head[Z]*1.5F)/3, // According to our resources
+            (head[Z]*1.5F)/3,
+            (head[Z]*1.5F)/3,
             head[Z]*1.5F
         };
     }

@@ -77,10 +77,11 @@ public class RobotArm extends RobotPart
     /*
      * Drawing a hand
      * If it is not a stick figure, it has a hand with 4 fingers and 1 thumb
+     * If it is a stick figure, this method will be ignore in the calling method
      */
     private void drawHand()
     {
-        // length, z-offset of the next finger
+        // the x and z offset from the center-top point of the palm of the hand
         float[][] fingers = new float[][]
         {
             {
@@ -114,13 +115,13 @@ public class RobotArm extends RobotPart
             gl.glTranslatef(0F, this.hand[Y]/1.5F, this.hand[Z]/4F);
             gl.glRotatef(90, 0f, 0f, 1f);
             gl.glRotatef(-40, 0f, 1f, 0f);
-            thumbpart();
+            fingerpart();
             gl.glTranslatef(0f, 0f, -this.hand[Z]/3F);
             gl.glRotatef(15, 0f, 1f, 0f);
-            thumbpart();
+            fingerpart();
             gl.glTranslatef(0f, 0f, -this.hand[Z]/3F);
             gl.glRotatef(5, 0f, 1f, 0f);
-            thumbpart();
+            fingerpart();
         }
         gl.glPopMatrix();
         // Back to where we were and draw 4 fingers
@@ -133,7 +134,7 @@ public class RobotArm extends RobotPart
                 gl.glTranslatef(finger[0], 0f, finger[1]);
                 for (int i = 0; i < 3; i++)
                 {
-                    thumbpart();
+                    fingerpart();
                     gl.glTranslatef(0f, 0f, -this.hand[Z]/3F);
                 }
             }
@@ -142,8 +143,10 @@ public class RobotArm extends RobotPart
         }
         gl.glPopMatrix();
     }
-    
-    private void thumbpart()
+    /**
+     * Draws a part of a finger
+     */
+    private void fingerpart()
     {
         gl.glScalef(this.hand[X]/1.5F, this.hand[X]/1.5F, -this.hand[Z]/3);
         gl.glTranslatef(0f, 0f, 1f);
@@ -163,8 +166,8 @@ public class RobotArm extends RobotPart
         
         this.uDimensions = new float[]
         {
-            (head[Z]*1.75F - this.shoulderRadius - this.elbowRadius/2)/3F, // According to our resources, a third of the length
-            (head[Z]*1.75F - this.shoulderRadius - this.elbowRadius/2)/3F, // According to our resources, a third of the length
+            (head[Z]*1.75F - this.shoulderRadius - this.elbowRadius/2)/3F,
+            (head[Z]*1.75F - this.shoulderRadius - this.elbowRadius/2)/3F,
             head[Z]*1.75F - this.shoulderRadius - this.elbowRadius/2
         };
         
@@ -174,8 +177,8 @@ public class RobotArm extends RobotPart
         
         this.lDimensions = new float[]
         {
-            (head[Z] - this.elbowRadius/2)/3, // According to our resources
-            (head[Z] - this.elbowRadius/2)/3, // According to our resources
+            (head[Z] - this.elbowRadius/2)/3,
+            (head[Z] - this.elbowRadius/2)/3,
             head[Z] - this.elbowRadius/2
         };
         

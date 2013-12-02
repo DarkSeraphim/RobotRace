@@ -27,17 +27,38 @@ public abstract class RobotPart
         RobotPart.glut = glut;
     }
 
+    /**
+     * Draws the bodypart
+     * @param isStick whether to draw a stick figure or a full robot
+     */
     public abstract void draw(boolean isStick);
     
+    /**
+     * Recalculates the origin and dimensions for the bodypart
+     */
     public abstract void recalculate();
- // for ceratin body parts like feet and the head.
+    
+    /**
+     * Draws half a sphere at the current local origin
+     * for creating body parts like feet and the head.
+     * @param r radius of the sphere
+     * @param scalex amount of slices
+     * @param scaley amount of stacks
+     */
     public static void drawHalfSphere(float r, int scalex, int scaley)
     {
         gl.glPushMatrix();
         _drawHalfSphere(r, scalex, scaley);
         gl.glPopMatrix();
     }
-    // draws half spheres for certain body parts like the feet and the head
+
+    /**
+     * Private method for the actual drawing. This implementation does not push
+     * nor pop, to save space on the stack. (This is done by the public method
+     * @param r radius of the sphere
+     * @param scalex amount of slices
+     * @param scaley amount of stacks
+     */
     private static void _drawHalfSphere(float r, int scalex, int scaley)
     {
         int i, j;
@@ -66,7 +87,14 @@ public abstract class RobotPart
         }
         gl.glEnd();
     }
-    //drawing a normal solid sphere
+    
+    /**
+     * Draws a sphere at the current local origin
+     * @param r radius of the sphere
+     * @param scalex amount of slices
+     * @param scaley amount of stacks
+     * @deprecated Currently a bit broken
+     */
     public static void drawSphere(float r, int scalex, int scaley)
     {
         /*gl.glPushMatrix();

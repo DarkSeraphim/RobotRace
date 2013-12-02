@@ -107,6 +107,7 @@ public class RobotRace extends Base
         gl.glEnable(GL_BLEND);
         gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        // Let openGL do the normalizing
         gl.glEnable(GL_NORMALIZE);
         
         // Enable anti-aliasing.
@@ -117,8 +118,11 @@ public class RobotRace extends Base
         
         //enable lighting
         gl.glEnable(GL_LIGHTING);
+        
         //creating camera lightsource
         gl.glEnable(GL_LIGHT0); 
+        
+        // Setup the global ambient light
         float[] globalAmbient  = {0.5f, 0.5f, 0.5f, 1.0f}; 
         gl.glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient,0);
         
@@ -131,6 +135,8 @@ public class RobotRace extends Base
         gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
         gl.glBindTexture(GL_TEXTURE_2D, 0);
         
+        // Initialize the openGL variables of RobotPart,
+        //  so we can refer to them in the subclasses
         RobotPart.initialize(gl, glu, glut);
     }
 
@@ -161,7 +167,7 @@ public class RobotRace extends Base
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity();
         
-        // keeps the coordinates of the camera
+        // get the coordinates of the camera
         double camera_X = gs.vDist * (Math.sin(gs.theta)) * Math.cos(gs.phi); 
         double camera_Y = gs.vDist * (Math.cos(gs.theta)) * Math.cos(gs.phi);       
         double camera_Z = gs.vDist * Math.sin(gs.phi);     
@@ -260,6 +266,7 @@ public class RobotRace extends Base
      */
     public void drawAxisFrame()
     {
+        // Yellow
         gl.glColor3ub((byte)255, (byte)255, (byte)0);
         gl.glScaled(0.1, 0.1, 0.1);
         glut.glutSolidSphere(1, 16, 16);
