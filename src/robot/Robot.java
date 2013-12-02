@@ -1,7 +1,14 @@
 package robot;
-
 import javax.media.opengl.GL;
+import static javax.media.opengl.GL.GL_FRONT;
+import static javax.media.opengl.GL2.*;
 import javax.media.opengl.GL2;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_AMBIENT;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_DIFFUSE;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SHININESS;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SPECULAR;
+import robotrace.Base;
+import robotrace.GlobalState;
 
 
 
@@ -69,6 +76,7 @@ public class Robot
      */
     public void draw(boolean stickFigure)
     {
+
         this.head.draw(stickFigure);
         this.body.draw(stickFigure);
         this.leftArm.draw(stickFigure);
@@ -77,4 +85,5 @@ public class Robot
         this.rightLeg.draw(stickFigure);
         // code goes here ...
     }
+    
 }

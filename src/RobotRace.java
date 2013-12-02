@@ -1,7 +1,13 @@
 
 import robot.Material;
 import robot.Robot;
+import javax.media.opengl.GL;
+import static javax.media.opengl.GL.GL_FRONT;
 import static javax.media.opengl.GL2.*;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_AMBIENT;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_DIFFUSE;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SHININESS;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SPECULAR;
 import robot.RobotPart;
 import robotrace.Base;
 import robotrace.GlobalState;
@@ -200,8 +206,26 @@ public class RobotRace extends Base
         }
 
         // Draw the first robot
+        gl.glPushMatrix();
+        gl.glTranslatef(1.5f, 0f, 0f);
         robots[0].draw(gs.showStick);
-
+        gl.glPopMatrix();
+        // Draw the second robot
+        gl.glPushMatrix();        
+        gl.glTranslatef(0.5f, 0f, 0f);
+        robots[1].draw(gs.showStick);
+        gl.glPopMatrix();
+        // Draw the third robot
+        gl.glPushMatrix();        
+        gl.glTranslatef(-0.5f, 0f, 0f);
+        robots[2].draw(gs.showStick);
+        gl.glPopMatrix();
+        // Draw the fourth robot
+        gl.glPushMatrix();        
+        gl.glTranslatef(-1.5f, 0f, 0f);
+        robots[3].draw(gs.showStick);
+        gl.glPopMatrix();
+        
         // Draw race track
         raceTrack.draw(gs.trackNr);
 
