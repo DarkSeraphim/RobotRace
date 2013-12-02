@@ -42,8 +42,11 @@ public class RobotHead extends RobotPart
             }
             else
             {
-                gl.glTranslatef(0.0f, 0.2f, 0.0f);
-                glut.glutSolidSphere(0.2, 16, 16);
+                gl.glRotated(90, 1, 0, 0);
+                gl.glScalef(this.dimensions[X]/2, this.dimensions[Z]/2, this.dimensions[X]/2);
+                drawHalfSphere(1F, 32, 32);
+                gl.glRotated(180, 1, 0, 0);
+                drawHalfSphere(1F, 32, 32);
             }
         gl.glPopMatrix();
     }

@@ -1,6 +1,9 @@
 package robot;
 
+import static robot.RobotPart.X;
+import static robot.RobotPart.Z;
 import static robot.RobotPart.gl;
+import static robot.RobotPart.glut;
 
 /**
  *
@@ -13,8 +16,8 @@ public class RobotArm extends RobotPart
     private float[] uDimensions;
     private float[] lDimensions;
     private float[] hand;
-    private float shoulderRadius = 0.1F;
-    private float elbowRadius = 0.1F;
+    private float shoulderRadius = 0.075F;
+    private float elbowRadius = 0.075F;
     private Robot robot;
     private boolean isLeft;
 
@@ -81,19 +84,19 @@ public class RobotArm extends RobotPart
         float[][] fingers = new float[][]
         {
             {
-                0.22f, 0f
+                -2*(this.hand[Y]/3), this.hand[Z]/1.5f
             }, // pinky :D
             
             {
-                0.26f, 0f
+                -this.hand[Y]/4.5F, this.hand[Z]/8f
             }, // ring finger
             
             {
-                0.27f, 0f
+                this.hand[Y]/4.5F, this.hand[Z]/8f
             }, // middle finger
             
             {
-                0.25f, 0f
+                2*(this.hand[Y]/3), this.hand[Z]/2f
             }
         }; // index finger
         // translate to the middle of the palm
@@ -107,40 +110,44 @@ public class RobotArm extends RobotPart
         gl.glPushMatrix();
         // Thumb code
         {
-            gl.glTranslatef(0F, this.hand[Y]/1F, this.hand[Z]/3F);
+            gl.glTranslatef(0F, this.hand[Y]/1.5F, this.hand[Z]/4F);
             gl.glRotatef(90, 0f, 0f, 1f);
-            gl.glRotatef(-45, 0f, 1f, 0f);
+            gl.glRotatef(-40, 0f, 1f, 0f);
             thumbpart();
-            gl.glTranslatef(0f, 0f, -this.hand[Z]/3);
+            gl.glTranslatef(0f, 0f, -this.hand[Z]/3F);
             gl.glRotatef(15, 0f, 1f, 0f);
-            glut.glutSolidSphere(0.01, 16, 16);
             thumbpart();
-            gl.glTranslatef(0f, 0f, -this.hand[Z]/3);
-            glut.glutSolidSphere(0.01, 16, 16);
+            gl.glTranslatef(0f, 0f, -this.hand[Z]/3F);
+            gl.glRotatef(5, 0f, 1f, 0f);
             thumbpart();
         }
         gl.glPopMatrix();
         // Back to where we were and draw 4 fingers
-        /*gl.glTranslatef(-0.075f, 0.0f, 0.00f);// translate to pink
+        gl.glRotatef(90, 0F, 0F, 1F);
+        gl.glTranslatef(0f, 0f, -this.hand[Z]);
         for (float[] finger : fingers)
         {
             gl.glPushMatrix();
-            for (int i = 0; i < 3; i++)
             {
-                glut.glutSolidCylinder(0.02f, -finger[0] / 3, 16, 16);
-                glut.glutSolidSphere(0.025, 16, 16);
-                gl.glTranslatef(0f, 0f, -finger[0] / 3);
+                gl.glTranslatef(finger[0], 0f, finger[1]);
+                for (int i = 0; i < 3; i++)
+                {
+                    thumbpart();
+                    gl.glTranslatef(0f, 0f, -this.hand[Z]/3F);
+                }
             }
             gl.glPopMatrix();
-            gl.glTranslatef(0.05f, 0f, finger[1]);
+            //gl.glTranslatef(0.05f, 0f, finger[1]);
         }
-        */
         gl.glPopMatrix();
     }
     
     private void thumbpart()
     {
         gl.glScalef(this.hand[X]/1.5F, this.hand[X]/1.5F, -this.hand[Z]/3);
+        gl.glTranslatef(0f, 0f, 1f);
+        glut.glutSolidSphere(0.6, 16, 16);
+        gl.glTranslatef(0f, 0f, -1f);
         glut.glutSolidCylinder(0.5f, 1F, 16, 16);
         gl.glScalef(1.5F/this.hand[X], 1.5F/this.hand[X], -3F/this.hand[Z]);
     }
@@ -173,7 +180,7 @@ public class RobotArm extends RobotPart
         this.hand = new float[]
         {
             this.lDimensions[X]/4F,
-            this.lDimensions[Z]/4F,
+            this.lDimensions[Z]/5F,
             this.lDimensions[Z]/4F
         };
     }

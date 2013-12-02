@@ -2,6 +2,7 @@ package robot;
 
 import static robot.RobotPart.Z;
 import static robot.RobotPart.gl;
+import static robot.RobotPart.glut;
 
 /**
  *
@@ -38,7 +39,7 @@ public class RobotLeg extends RobotPart
         gl.glScalef(this.uDimensions[X], this.uDimensions[Y], this.uDimensions[Z]);
         if (isStick)
         {
-            glut.glutSolidCylinder(0.01D, 1D, 16, 16);
+            glut.glutSolidCylinder(0.01*(1/this.lDimensions[X]), 1D, 16, 16);
         }
         else
         {
@@ -59,15 +60,15 @@ public class RobotLeg extends RobotPart
         {
             glut.glutSolidCylinder(.5D, 1D, 16, 16);
         }
-        gl.glScalef(1/this.lDimensions[X], 1/this.lDimensions[Y], 1/this.lDimensions[Z]);
-        gl.glTranslatef(0, 0, -this.lDimensions[Z]/2);
-        gl.glRotatef(90, 1.0f, 0.0f, 0.0f);
-        gl.glRotatef(90, 0.0f, 1.0f, 0.0f);
-        // Foot
-        gl.glTranslatef(-this.lDimensions[X], 0.0f, 0.0f);
-        gl.glScalef(this.lDimensions[X] * 2.5f, this.lDimensions[X] * 1f, this.lDimensions[X] * 1.25f);
         if (!isStick)
         {
+            gl.glScalef(1/this.lDimensions[X], 1/this.lDimensions[Y], 1/this.lDimensions[Z]);
+            //gl.glTranslatef(0, 0, -this.lDimensions[Z]/2);
+            gl.glRotatef(90, 1.0f, 0.0f, 0.0f);
+            gl.glRotatef(90, 0.0f, 1.0f, 0.0f);
+            // Foot
+            gl.glTranslatef(this.lDimensions[X]/2, 0.0f, 0.0f);
+            gl.glScalef(this.lDimensions[X] * 1.5f, this.lDimensions[X] * 1f, this.lDimensions[X] * 1.25f);
             drawHalfSphere(1f, 32, 32);
             gl.glScalef(1.0f, 0.0f, 1.0f);
             drawHalfSphere(1f, 32, 32);
