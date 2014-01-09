@@ -1,12 +1,21 @@
 
-import robot.Material;
-import robot.Robot;
+import com.jogamp.opengl.util.gl2.GLUT;
+import static java.lang.Math.PI;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import static javax.media.opengl.GL2.*;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHT0;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_POSITION;
-import robot.RobotPart;
+import javax.media.opengl.glu.GLU;
 import robotrace.Base;
+import robotrace.GlobalState;
 
 /**
  * Handles all of the RobotRace graphics functionality, which should be extended
@@ -44,7 +53,7 @@ public class RobotRace extends Base
     /**
      * Array of the four robots.
      */
-    private final Robot[] robots;
+    private Robot[] robots;
     /**
      * Instance of the camera.
      */
@@ -52,7 +61,7 @@ public class RobotRace extends Base
     /**
      * Instance of the race track.
      */
-    private final RaceTrack raceTrack;
+    private RaceTrack raceTrack;
     /**
      * Instance of the terrain.
      */
@@ -64,28 +73,8 @@ public class RobotRace extends Base
      */
     public RobotRace()
     {
-        float[] headDimensions = new float[]{0.1524F, 0.2413F, 0.2286F};
-        
-        // Create a new array of four robots
-        robots = new Robot[4];
-
-        // Initialize robot 0
-        robots[0] = new Robot(Material.GOLD, headDimensions);
-
-        // Initialize robot 1
-        robots[1] = new Robot(Material.SILVER, headDimensions);
-
-        // Initialize robot 2
-        robots[2] = new Robot(Material.WOOD, headDimensions);
-
-        // Initialize robot 3
-        robots[3] = new Robot(Material.ORANGE, headDimensions);
-
         // Initialize the camera
-        camera = new Camera(this);
-
-        // Initialize the race track
-        raceTrack = new RaceTrack();
+        camera = new Camera(this, this.gl, this.glu, this.glut, this.gs);
 
         // Initialize the terrain
         terrain = new Terrain();
@@ -94,6 +83,69 @@ public class RobotRace extends Base
     public Robot[] getRobots()
     {
         return this.robots;
+    }
+    
+    /**
+     * Checks how far each {@code Robot} is, and returns the one that is the furthest
+     * @return the furthest {@code Robot}, due to {@link Double.MIN_VALUE}, never null
+     */
+    public Robot getLeadingRobot()
+    {
+        double max = Double.MIN_VALUE;
+        Robot mr = null;
+        for(Robot r : this.robots)
+        {
+            if(r.getTime() > max)
+            {
+                mr = r;
+                max = r.getTime();
+            }
+        }
+        return mr;
+    }
+    
+    /**
+     * Checks how far each {@code Robot} is, and returns the one that is the closest
+     * @return the closest {@code Robot}, due to {@link Double.MIN_VALUE}, never null
+     */
+    public Robot getLastRobot()
+    {
+        double min = Double.MAX_VALUE;
+        Robot mr = null;
+        for(Robot r : this.robots)
+        {
+            if(r.getTime() < min)
+            {
+                mr = r;
+                min = r.getTime();
+            }
+        }
+        return mr;
+    }
+    
+    public RaceTrack getRaceTrack()
+    {
+        return this.raceTrack;
+    }
+    
+    public GL2 gl()
+    {
+        return this.gl;
+    }
+    
+    public GLU glu()
+    {
+        return this.glu;
+    }
+    
+    public GLUT glut()
+    {
+        return this.glut;
+    }
+    
+    public GlobalState gs()
+    {
+        return this.gs;
     }
 
     /**
@@ -138,6 +190,26 @@ public class RobotRace extends Base
         // Initialize the openGL variables of RobotPart,
         //  so we can refer to them in the subclasses
         RobotPart.initialize(gl, glu, glut);
+        
+        // Initialize the race track
+        raceTrack = new RaceTrack(gl);
+        
+        float[] headDimensions = new float[]{0.1524F, 0.2413F, 0.2286F};
+        
+        // Create a new array of four robots
+        robots = new Robot[4];
+
+        // Initialize robot 0
+        robots[0] = new Robot(Material.GOLD, headDimensions, -1);
+
+        // Initialize robot 1
+        robots[1] = new Robot(Material.SILVER, headDimensions, -1 + (2D/3D));
+
+        // Initialize robot 2
+        robots[2] = new Robot(Material.WOOD, headDimensions, 1 - (2D/3D));
+
+        // Initialize robot 3
+        robots[3] = new Robot(Material.ORANGE, headDimensions, 1);
     }
 
 
@@ -167,25 +239,11 @@ public class RobotRace extends Base
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity();
         
-        // get the coordinates of the camera
-        double camera_X = gs.vDist * (Math.sin(gs.theta)) * Math.cos(gs.phi); 
-        double camera_Y = gs.vDist * (Math.cos(gs.theta)) * Math.cos(gs.phi);       
-        double camera_Z = gs.vDist * Math.sin(gs.phi);     
-        
-        //sets he light source to the camera point of vew, but a little bit shifted uppwards and to the left 
-        float[] cameraLightPos  = {(float)camera_X+2.5f,(float)camera_Y,(float)camera_Z+3f, 1.0f};
-        gl.glLightfv( GL_LIGHT0, GL_POSITION, cameraLightPos,0); 
-        
         // Update the view according to the camera mode
         camera.update(gs.camMode);
        // glu.gluLookAt(camera.eye.x(), camera.eye.y(), camera.eye.z(),
        //         camera.center.x(), camera.center.y(), camera.center.z(),
        //         camera.up.x(), camera.up.y(), camera.up.z());
-        glu.gluLookAt(gs.vDist * (Math.sin(gs.theta)) * Math.cos(gs.phi) , 
-                gs.vDist * (Math.cos(gs.theta)) * Math.cos(gs.phi),
-                gs.vDist * Math.sin(gs.phi),
-                gs.cnt.x(), gs.cnt.y(), gs.cnt.z(),
-                camera.up.x(), camera.up.y(), camera.up.z());
     }
 
     /**
@@ -216,31 +274,30 @@ public class RobotRace extends Base
 
         gl.glEnable(GL_LIGHTING);
 
+        for(Robot r : robots)
+            r.update(this.raceTrack);
         // Draw the first robot
         gl.glPushMatrix();
-        gl.glTranslatef(1.5f, 0f, 0f);
         robots[0].draw(gs.showStick);
         gl.glPopMatrix();
         // Draw the second robot
         gl.glPushMatrix();        
-        gl.glTranslatef(0.5f, 0f, 0f);
         robots[1].draw(gs.showStick);
         gl.glPopMatrix();
         // Draw the third robot
         gl.glPushMatrix();        
-        gl.glTranslatef(-0.5f, 0f, 0f);
         robots[2].draw(gs.showStick);
         gl.glPopMatrix();
         // Draw the fourth robot
         gl.glPushMatrix();        
-        gl.glTranslatef(-1.5f, 0f, 0f);
         robots[3].draw(gs.showStick);
         gl.glPopMatrix();
-        gl.glDisable(GL_LIGHTING);
         
         // Draw race track
         raceTrack.draw(gs.trackNr);
 
+         gl.glDisable(GL_LIGHTING);
+        
         // Draw terrain
         terrain.draw();
 
@@ -324,5 +381,88 @@ public class RobotRace extends Base
     public static void main(String args[])
     {
         RobotRace robotRace = new RobotRace();
+    }
+    
+    public static class VBOUtil
+    {
+                
+        private static Map<BufferData.Key, BufferData> cache = new HashMap<BufferData.Key, BufferData>();
+
+        public static BufferData bufferHalfSphere(float r, int scalex, int scaley)
+        {
+            BufferData.Key key = BufferData.createKey(r, scalex, scaley);
+            if(cache.containsKey(key))
+                return cache.get(key);
+            int i, j;
+            FloatBuffer buf = FloatBuffer.allocate(scalex * scaley * 3);
+            FloatBuffer nbuf = FloatBuffer.allocate(scalex * scaley * 3);
+            for (i = 0; i < scalex; ++i)
+            {
+                for (j = 0; j < scaley; ++j)
+                {
+                    nbuf.put(r * (float) cos(j * 2 * PI / scaley) * (float) cos(i * PI / (2 * scalex)));
+                    buf.put(r * (float) cos(j * 2 * PI / scaley) * (float) cos(i * PI / (2 * scalex)));
+                    nbuf.put(r * (float) sin(i * PI / (2 * scalex)));
+                    buf.put(r * (float) sin(i * PI / (2 * scalex)));
+                    nbuf.put(r * (float) sin(j * 2 * PI / scaley) * (float) cos(i * PI / (2 * scalex)));
+                    buf.put(r * (float) sin(j * 2 * PI / scaley) * (float) cos(i * PI / (2 * scalex)));
+                }
+            }
+            buf.flip();
+            nbuf.flip();
+            ShortBuffer ebuf = ShortBuffer.allocate((scalex*scaley)*4);
+            for (i = 0; i < scalex; ++i)
+            {
+                for (j = 0; j < scaley; ++j)
+                {
+                    ebuf.put((short)((i % scalex) * scaley + j));
+                    ebuf.put((short)(((i + 1) % scalex) * scaley + j));
+                    ebuf.put((short)(((i + 1) % scalex) * scaley + (j + 1) % scaley));
+                    ebuf.put((short)((i % scalex) * scaley + (j + 1) % scaley));
+                }
+            }
+            ebuf.flip();
+
+            BufferData bd = bufferData(buf, nbuf, ebuf);
+            cache.put(key, bd);
+            return bd;
+        }
+
+        public static BufferData bufferData(FloatBuffer vertices, FloatBuffer normals, ShortBuffer indices)
+        {
+            int[] id = new int[3];
+            GL2 gl = RobotPart.gl;
+            gl.glGenBuffers(3, id, 0);
+            gl.glBindBuffer(GL.GL_ARRAY_BUFFER, id[0]);
+            gl.glBufferData(GL.GL_ARRAY_BUFFER, vertices.capacity()*Float.SIZE, vertices, GL.GL_STATIC_DRAW);
+            gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+
+            gl.glBindBuffer(GL.GL_ARRAY_BUFFER, id[1]);
+            gl.glBufferData(GL.GL_ARRAY_BUFFER, normals.capacity()*Float.SIZE, normals, GL.GL_STATIC_DRAW);
+            gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+
+            gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, id[2]);
+            gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices.capacity()*Short.SIZE, indices, GL.GL_STATIC_DRAW);
+            gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
+
+            return new BufferData(id[0], vertices,  id[1], normals, id[2], indices);
+        }
+
+        public static void drawBufferedObject(BufferData bd)
+        {
+            GL2 gl = RobotPart.gl;
+            gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+            gl.glEnableClientState(GL2.GL_NORMAL_ARRAY);
+            gl.glBindBuffer(GL.GL_ARRAY_BUFFER, bd.getVertexId());
+            gl.glVertexPointer(3, GL2.GL_FLOAT, 0, 0);
+            gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, bd.getElementId());
+            gl.glBindBuffer(GL.GL_ARRAY_BUFFER, bd.getNormalId());
+            gl.glNormalPointer(GL2.GL_FLOAT, 0, 0);
+            gl.glDrawElements(GL2.GL_QUADS, bd.getElementSize(), GL2.GL_UNSIGNED_SHORT, 0);
+            gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+            gl.glDisableClientState(GL2.GL_NORMAL_ARRAY);
+            gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+            gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
+        }
     }
 }

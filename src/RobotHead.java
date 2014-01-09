@@ -1,6 +1,4 @@
-package robot;
 
-import static robot.RobotPart.gl;
 
 /**
  *
@@ -14,7 +12,7 @@ public class RobotHead extends RobotPart
     public float[] origin;
     
     public float[] dimensions;
-    
+        
     public RobotHead(Robot robot)
     {
         this.robot = robot;
@@ -36,10 +34,9 @@ public class RobotHead extends RobotPart
             {
                 gl.glRotated(90, 1, 0, 0);
                 gl.glScalef(this.dimensions[X]/2, this.dimensions[Z]/3, this.dimensions[X]/2);
-                drawHalfSphere(1F, 32, 32); // top half of the head
-                //gl.glRotated(180, 0, 0, 1);
-                gl.glScaled(1, 2, 1);
-                drawHalfSphere(-1F, 32, 32); // bottom half of the head
+                drawHalfSphere(1F, 128, 128); // top half of the head
+                gl.glScaled(1, -2, 1);
+                drawHalfSphere(1F, 32, 32); // bottom half of the head
             }
             else // if stick figures mode is on
             {
@@ -65,5 +62,5 @@ public class RobotHead extends RobotPart
             head[Z]
         };
     }
-
+    
 }

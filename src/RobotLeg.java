@@ -1,7 +1,4 @@
-package robot;
 
-import static robot.RobotPart.gl;
-import static robot.RobotPart.glut;
 
 /**
  *
@@ -17,7 +14,7 @@ public class RobotLeg extends RobotPart
     
     private Robot robot;
     private boolean isLeft;
-
+    
     public RobotLeg(Robot robot, boolean isLeft)
     {
         this.robot = robot;
@@ -45,8 +42,8 @@ public class RobotLeg extends RobotPart
         }
         gl.glScalef(1/this.uDimensions[X], 1/this.uDimensions[Y], 1/this.uDimensions[Z]);
         gl.glTranslatef(0, 0, -(this.kneeRadius));
-        //glut.glutSolidSphere(this.kneeRadius, 16, 16);
-        drawSphere(this.kneeRadius, 16, 16);
+        this.drawSphere(this.kneeRadius, 128, 128);
+        
         gl.glTranslatef(0, 0, -(this.kneeRadius)-this.lDimensions[Z]);
         gl.glScalef(this.lDimensions[X], this.lDimensions[Y], this.lDimensions[Z]);
         if (isStick) // if stick figures mode is on
@@ -65,10 +62,10 @@ public class RobotLeg extends RobotPart
             gl.glRotatef(90, 0.0f, 1.0f, 0.0f);
             // Foot
             gl.glTranslatef(this.lDimensions[X]/2, 0.0f, 0.005F);
-            gl.glScalef(this.lDimensions[X] * 1.5f, this.lDimensions[X] * 1f, this.lDimensions[X] * 1.25f);
-            drawHalfSphere(1f, 32, 32);
+            gl.glScalef(this.lDimensions[X] * 1.25f, this.lDimensions[X] * 1f, this.lDimensions[X] * 1f);
+            this.drawHalfSphere(1f, 128, 128);
             gl.glScalef(1.0f, 0.0f, 1.0f);
-            drawHalfSphere(1f, 32, 32);
+            this.drawHalfSphere(1f, 128, 128);
         }
         gl.glPopMatrix();
     }

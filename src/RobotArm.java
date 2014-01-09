@@ -1,7 +1,8 @@
-package robot;
 
-import static robot.RobotPart.gl;
-import static robot.RobotPart.glut;
+import robotrace.Vector;
+import static java.lang.Math.*;
+
+
 
 /**
  *
@@ -15,6 +16,8 @@ public class RobotArm extends RobotPart
     private float[] lDimensions;
     private float[] hand;
     private float shoulderRadius = 0.075F;
+    private Vector shoulderRotVec = Vector.O;
+    private double shoulderRot = 0;
     private float elbowRadius = 0.075F;
     private Robot robot;
     private boolean isLeft;
@@ -25,7 +28,7 @@ public class RobotArm extends RobotPart
     public RobotArm(Robot robot, boolean isLeft)
     {
         this.robot = robot;
-        this.isLeft = isLeft; // dtermines if left or right arm
+        this.isLeft = isLeft; //  if left or right arm
         recalculate();
     }
 
@@ -38,8 +41,8 @@ public class RobotArm extends RobotPart
     {
         gl.glPushMatrix();
         gl.glTranslatef(this.origin[X], this.origin[Y], this.origin[Z]);
-        //glut.glutSolidSphere(this.shoulderRadius, 16, 16); // shoulder
-        drawSphere(this.shoulderRadius, 16, 16); // shoulder
+        this.drawSphere(this.shoulderRadius, 128, 128);
+        gl.glRotated(shoulderRot, shoulderRotVec.x(), shoulderRotVec.y(), shoulderRotVec.z());
         gl.glTranslatef(0, 0, -this.uDimensions[Z] - this.shoulderRadius);
         gl.glScalef(this.uDimensions[X], this.uDimensions[Y], this.uDimensions[Z]);
         if (isStick)
@@ -52,8 +55,7 @@ public class RobotArm extends RobotPart
         }
         gl.glScalef(1/this.uDimensions[X], 1/this.uDimensions[Y], 1/this.uDimensions[Z]);
         gl.glTranslatef(0, 0, -this.elbowRadius);
-        //glut.glutSolidSphere(this.elbowRadius, 16, 16);
-        drawSphere(this.elbowRadius, 16, 16);
+        drawSphere(this.elbowRadius, 128, 128);
         gl.glTranslatef(0, 0, -this.elbowRadius - this.lDimensions[Z]);
         gl.glScalef(this.lDimensions[X], this.lDimensions[Y], this.lDimensions[Z]);
         if (isStick) // if stick figures mode is on
@@ -106,7 +108,7 @@ public class RobotArm extends RobotPart
         //gl.glRotatef(-90, 1f, 0f, 0f);
         gl.glScalef(this.hand[X], this.hand[Y], this.hand[Z]);
         //glut.glutSolidSphere(1f, 16, 16);
-        drawSphere(1f, 16, 16);
+        this.drawSphere(1F, 128, 128);
         gl.glScalef(1/this.hand[X], 1/this.hand[Y], 1/this.hand[Z]);
         //gl.glRotatef(-90, 0f, 1f, 0f);
         gl.glPushMatrix();
@@ -150,8 +152,7 @@ public class RobotArm extends RobotPart
     {
         gl.glScalef(this.hand[X]/1.5F, this.hand[X]/1.5F, -this.hand[Z]/3);
         gl.glTranslatef(0f, 0f, 1f);
-        //glut.glutSolidSphere(0.6, 16, 16);
-        drawSphere(0.6F, 16, 16);
+        this.drawSphere(0.6F, 16, 16);
         gl.glTranslatef(0f, 0f, -1f);
         glut.glutSolidCylinder(0.5f, 1F, 16, 16);
         gl.glScalef(1.5F/this.hand[X], 1.5F/this.hand[X], -3F/this.hand[Z]);
@@ -188,5 +189,14 @@ public class RobotArm extends RobotPart
             this.lDimensions[Z]/5F,
             this.lDimensions[Z]/4F
         };
+    }
+    
+    public void update()
+    {
+        double time = this.robot.getTime();
+        this.shoulderRotVec = Vector.X;
+        time %= this.robot.getSpeed()*10;
+        this.shoulderRot = asin(time*100);
+        //System.out.println(shoulderRot);
     }
 }
