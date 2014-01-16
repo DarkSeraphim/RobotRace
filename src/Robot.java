@@ -130,7 +130,9 @@ public class Robot
         this.leftArm.draw(stickFigure);
         this.rightArm.update();
         this.rightArm.draw(stickFigure);
+        this.leftLeg.update();
         this.leftLeg.draw(stickFigure);
+        this.rightLeg.update();
         this.rightLeg.draw(stickFigure);
     }
     

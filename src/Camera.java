@@ -126,7 +126,8 @@ public class Camera
         double camera_Z = gs.vDist * Math.sin(gs.phi);     
         
         //sets he light source to the camera point of vew, but a little bit shifted uppwards and to the left 
-        float[] cameraLightPos  = {(float)camera_X+2.5f,(float)camera_Y,(float)camera_Z+3f, 1.0f};
+        //float[] cameraLightPos  = {(float)camera_X+2.5f,(float)camera_Y,(float)camera_Z+3f, 1.0f};
+        float[] cameraLightPos  = {(float)camera_X,(float)camera_Y,(float)camera_Z, 1.0f};
         gl.glLightfv( GL_LIGHT0, GL_POSITION, cameraLightPos,0); 
         
         this.eye = new Vector(gs.vDist * (Math.sin(gs.theta)) * Math.cos(gs.phi) , 

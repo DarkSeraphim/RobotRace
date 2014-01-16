@@ -1,5 +1,6 @@
 
 import com.jogamp.opengl.util.gl2.GLUT;
+import com.jogamp.opengl.util.texture.Texture;
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -147,6 +148,16 @@ public class RobotRace extends Base
     {
         return this.gs;
     }
+    
+    public Texture getBodyTexture()
+    {
+        return this.torso;
+    }
+    
+    public Texture getHeadTexture()
+    {
+        return this.head;
+    }
 
     /**
      * Called upon the start of the application. Primarily used to configure
@@ -192,7 +203,7 @@ public class RobotRace extends Base
         RobotPart.initialize(gl, glu, glut);
         
         // Initialize the race track
-        raceTrack = new RaceTrack(gl);
+        raceTrack = new RaceTrack(gl, brick);
         
         float[] headDimensions = new float[]{0.1524F, 0.2413F, 0.2286F};
         
@@ -427,12 +438,18 @@ public class RobotRace extends Base
             cache.put(key, bd);
             return bd;
         }
-
+        
         public static BufferData bufferData(FloatBuffer vertices, FloatBuffer normals, ShortBuffer indices)
         {
-            int[] id = new int[3];
+            return bufferData(vertices, normals, null, indices);
+        }
+
+        public static BufferData bufferData(FloatBuffer vertices, FloatBuffer normals, FloatBuffer texture, ShortBuffer indices)
+        {
+            int ids = texture != null ? 4 : 3;
+            int[] id = new int[ids];
             GL2 gl = RobotPart.gl;
-            gl.glGenBuffers(3, id, 0);
+            gl.glGenBuffers(ids, id, 0);
             gl.glBindBuffer(GL.GL_ARRAY_BUFFER, id[0]);
             gl.glBufferData(GL.GL_ARRAY_BUFFER, vertices.capacity()*Float.SIZE, vertices, GL.GL_STATIC_DRAW);
             gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
@@ -444,7 +461,14 @@ public class RobotRace extends Base
             gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, id[2]);
             gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices.capacity()*Short.SIZE, indices, GL.GL_STATIC_DRAW);
             gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
-
+            if(texture != null)
+            {
+                gl.glBindBuffer(GL.GL_ARRAY_BUFFER, id[3]);
+                gl.glBufferData(GL.GL_ARRAY_BUFFER, texture.capacity()*Float.SIZE, texture, GL.GL_STATIC_DRAW);
+                gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+                return new BufferData(id[0], vertices, id[1], normals, id[3], texture, id[2], indices);
+            }
+            
             return new BufferData(id[0], vertices,  id[1], normals, id[2], indices);
         }
 
@@ -453,11 +477,19 @@ public class RobotRace extends Base
             GL2 gl = RobotPart.gl;
             gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
             gl.glEnableClientState(GL2.GL_NORMAL_ARRAY);
+            if(bd.getTextureId() != -1)
+                gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
             gl.glBindBuffer(GL.GL_ARRAY_BUFFER, bd.getVertexId());
             gl.glVertexPointer(3, GL2.GL_FLOAT, 0, 0);
             gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, bd.getElementId());
             gl.glBindBuffer(GL.GL_ARRAY_BUFFER, bd.getNormalId());
             gl.glNormalPointer(GL2.GL_FLOAT, 0, 0);
+            if(bd.getTextureId() != -1)
+            {
+                gl.glBindBuffer(GL.GL_ARRAY_BUFFER, bd.getTextureId());
+                // Implement 1D textures in BufferData
+                gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
+            }
             gl.glDrawElements(GL2.GL_QUADS, bd.getElementSize(), GL2.GL_UNSIGNED_SHORT, 0);
             gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
             gl.glDisableClientState(GL2.GL_NORMAL_ARRAY);

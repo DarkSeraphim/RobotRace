@@ -72,11 +72,18 @@ public class BufferData
     private final int size;
     private final int esize;
     private final int nsize;
+    private final int tsize;
     private final int id;
     private final int eid;
     private final int nid;
+    private final int tid;
 
     public BufferData(int id, Buffer buf, int nid, Buffer nbuf, int eid, Buffer ebuf)
+    {
+        this(id, buf, nid, nbuf, -1, null, eid, ebuf);
+    }
+    
+    public BufferData(int id, Buffer buf, int nid, Buffer nbuf, int tid, Buffer tbuf, int eid, Buffer ebuf)
     {
         this.id = id;
         this.size = buf.capacity();
@@ -84,6 +91,8 @@ public class BufferData
         this.esize = ebuf.capacity();
         this.nid = nid;
         this.nsize = nbuf.capacity();
+        this.tid = tid;
+        this.tsize = tbuf != null ? tbuf.capacity() : -1;
     }
 
     public int getSize()
@@ -99,6 +108,11 @@ public class BufferData
     {
         return this.nsize;
     }
+    
+    public int getTextureSize()
+    {
+        return this.tsize;
+    }
 
     public int getVertexId()
     {
@@ -113,6 +127,11 @@ public class BufferData
     public int getNormalId()
     {
         return this.nid;
+    }
+    
+    public int getTextureId()
+    {
+        return this.tid;
     }
     
     public static BufferData.Key createKey(float radius, int scalex, int scaley)

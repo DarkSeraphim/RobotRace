@@ -1,4 +1,9 @@
 
+import static java.lang.Math.PI;
+import static java.lang.Math.sin;
+import robotrace.Vector;
+
+
 
 /**
  *
@@ -11,6 +16,12 @@ public class RobotLeg extends RobotPart
     float[] uDimensions; // upper leg dimensions
     float kneeRadius = 0.1F;
     float[] lDimensions; // lower leg dimensions
+    
+    private Vector hipRotVec = Vector.X;
+    private double hipRot = 0;
+    
+    private Vector kneeRotVec = Vector.X;
+    private double kneeRot = 0;
     
     private Robot robot;
     private boolean isLeft;
@@ -30,7 +41,9 @@ public class RobotLeg extends RobotPart
     public void draw(boolean isStick)
     {
         gl.glPushMatrix();
-        gl.glTranslatef(origin[X], origin[Y], origin[Z]-this.uDimensions[Z]);
+        gl.glTranslatef(origin[X], origin[Y], origin[Z]);
+        gl.glRotated(hipRot * (this.isLeft ? 1 : -1), hipRotVec.x(), hipRotVec.y(), hipRotVec.z());
+        gl.glTranslatef(0, 0, -this.uDimensions[Z]);
         gl.glScalef(this.uDimensions[X], this.uDimensions[Y], this.uDimensions[Z]);
         if (isStick) // if the stick figures mode is on
         {
@@ -43,7 +56,7 @@ public class RobotLeg extends RobotPart
         gl.glScalef(1/this.uDimensions[X], 1/this.uDimensions[Y], 1/this.uDimensions[Z]);
         gl.glTranslatef(0, 0, -(this.kneeRadius));
         this.drawSphere(this.kneeRadius, 128, 128);
-        
+        gl.glRotated(this.kneeRot, this.kneeRotVec.x(), this.kneeRotVec.y(), this.kneeRotVec.z());
         gl.glTranslatef(0, 0, -(this.kneeRadius)-this.lDimensions[Z]);
         gl.glScalef(this.lDimensions[X], this.lDimensions[Y], this.lDimensions[Z]);
         if (isStick) // if stick figures mode is on
@@ -94,5 +107,15 @@ public class RobotLeg extends RobotPart
             (head[Z]*1.5F)/3,
             head[Z]*1.5F
         };
+    }
+    
+    @Override
+    public void update()
+    {
+        double rrot = ((this.robot.getTime()*(0.01/this.robot.getSpeed())) % 1)*2*PI;
+        this.hipRot = sin(rrot)*50;
+        this.kneeRot = sin(rrot)*40;
+        if(rrot < PI)
+            this.kneeRot *= -1;
     }
 }

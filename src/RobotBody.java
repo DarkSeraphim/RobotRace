@@ -1,4 +1,8 @@
 
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
+
+
 
 
 /**
@@ -13,11 +17,47 @@ public class RobotBody extends RobotPart
     // I planned to use this if I was going to dynamically change body dimensions
     // But it was unused due a small lack of time
     private Robot robot;
+    private final BufferData bodyData;
 
     public RobotBody(Robot robot)
     {
         this.robot = robot;
         recalculate();
+        
+        float[] v = new float[]
+        {
+            -0.5f, -0.5f,  0.5f,
+            -0.5f,  0.5f,  0.5f,
+            -0.5f,  0.5f, -0.5f,
+            -0.5f, -0.5f, -0.5f,
+            
+             0.5f, -0.5f,  0.5f,
+             0.5f,  0.5f,  0.5f,
+             0.5f,  0.5f, -0.5f,
+             0.5f, -0.5f, -0.5f
+        };
+        float[] n = v;
+        float[] t = new float[]
+        {
+            
+        };
+        short[] i = new short[]
+        {
+            0, 1, 2, 3,
+            
+            0, 1, 5, 4,
+            1, 2, 6, 5,
+            2, 3, 7, 6,
+            3, 0, 4, 7,
+            
+            4, 5, 6, 7
+        };
+        
+        FloatBuffer vertices = FloatBuffer.wrap(v);
+        FloatBuffer normals = FloatBuffer.wrap(n);
+        FloatBuffer texture = null;//FloatBuffer.wrap(t);
+        ShortBuffer indices = ShortBuffer.wrap(i);
+        this.bodyData = RobotRace.VBOUtil.bufferData(vertices, normals, indices);
     }
     
     /*
@@ -39,7 +79,8 @@ public class RobotBody extends RobotPart
             }
             else // if solid robots mode is on
             {
-                glut.glutSolidCube(1);
+                RobotRace.VBOUtil.drawBufferedObject(this.bodyData);
+                //glut.glutSolidCube(1);
             }
             // And scale back
         gl.glPopMatrix();
@@ -56,6 +97,8 @@ public class RobotBody extends RobotPart
             head[Y]*0.8F,
             head[Z]*3.5F
         };
+        
+        System.out.println(java.util.Arrays.toString(this.dimensions));
         
         this.o = this.robot.getOrigin().clone();
         this.o[Z] += head[Z]*(5.75F);

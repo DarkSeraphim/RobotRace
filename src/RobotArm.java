@@ -16,9 +16,11 @@ public class RobotArm extends RobotPart
     private float[] lDimensions;
     private float[] hand;
     private float shoulderRadius = 0.075F;
-    private Vector shoulderRotVec = Vector.O;
+    private Vector shoulderRotVec = Vector.X;
     private double shoulderRot = 0;
-    private float elbowRadius = 0.075F;
+    private float elbowRadius = 0.050F;
+    private Vector elbowRotVec = Vector.X;
+    private double elbowRot = 0;
     private Robot robot;
     private boolean isLeft;
 
@@ -42,7 +44,7 @@ public class RobotArm extends RobotPart
         gl.glPushMatrix();
         gl.glTranslatef(this.origin[X], this.origin[Y], this.origin[Z]);
         this.drawSphere(this.shoulderRadius, 128, 128);
-        gl.glRotated(shoulderRot, shoulderRotVec.x(), shoulderRotVec.y(), shoulderRotVec.z());
+        gl.glRotated(shoulderRot * (this.isLeft ? 1 : -1), shoulderRotVec.x(), shoulderRotVec.y(), shoulderRotVec.z());
         gl.glTranslatef(0, 0, -this.uDimensions[Z] - this.shoulderRadius);
         gl.glScalef(this.uDimensions[X], this.uDimensions[Y], this.uDimensions[Z]);
         if (isStick)
@@ -56,6 +58,7 @@ public class RobotArm extends RobotPart
         gl.glScalef(1/this.uDimensions[X], 1/this.uDimensions[Y], 1/this.uDimensions[Z]);
         gl.glTranslatef(0, 0, -this.elbowRadius);
         drawSphere(this.elbowRadius, 128, 128);
+        gl.glRotated(elbowRot, elbowRotVec.x(), elbowRotVec.y(), elbowRotVec.z());
         gl.glTranslatef(0, 0, -this.elbowRadius - this.lDimensions[Z]);
         gl.glScalef(this.lDimensions[X], this.lDimensions[Y], this.lDimensions[Z]);
         if (isStick) // if stick figures mode is on
@@ -191,12 +194,11 @@ public class RobotArm extends RobotPart
         };
     }
     
+    @Override
     public void update()
     {
-        double time = this.robot.getTime();
-        this.shoulderRotVec = Vector.X;
-        time %= this.robot.getSpeed()*10;
-        this.shoulderRot = asin(time*100);
-        //System.out.println(shoulderRot);
+        double rrot = ((this.robot.getTime()*(0.01/this.robot.getSpeed())) % 1)*2*PI;
+        this.shoulderRot = sin(rrot)*50;
+        this.elbowRot = (this.shoulderRot / 2) + 90;//(sin(rrot) * 5) + 90;
     }
 }
